@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+
 
 class ProjetType extends AbstractType
 {
@@ -33,7 +35,13 @@ class ProjetType extends AbstractType
             ])
             ->add('statuts', TextType::class, [
                 'label' => 'Statut',
-            ]);
+            ])
+            ->add('pdfprojet', FileType::class, [
+                'label' => 'Fichier PDF du Projet',
+                'required' => false,
+                'mapped' => false, // Ce champ n'est pas directement mappé à l'entité
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

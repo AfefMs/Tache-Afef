@@ -8,32 +8,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;  // N'oubliez pas d'importer ce service
+use Symfony\Component\Validator\Validator\ValidatorInterface;  
 use App\Repository\CoursRepository;
 
 #[Route('/cours')]
 final class CoursController extends AbstractController
 {
-    private ValidatorInterface $validator;  // Propriété pour stocker le validateur
+    private ValidatorInterface $validator;  
 
-    // Injection du service ValidatorInterface via le constructeur
     public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
     }
 
-    // Méthode pour afficher tous les cours ou les rechercher
     #[Route('/', name: 'app_cours_index', methods: ['GET'])]
     public function index(Request $request, CoursRepository $coursRepository): Response
     {
-        // Récupérer le terme de recherche
         $searchTerm = $request->query->get('search', '');
 
-        // Rechercher les cours en fonction du terme de recherche
         if ($searchTerm) {
             $cours = $coursRepository->findBySearchTerm($searchTerm);
         } else {
-            // Si pas de recherche, afficher tous les cours
             $cours = $coursRepository->findAll();
         }
 
@@ -42,7 +37,6 @@ final class CoursController extends AbstractController
         ]);
     }
 
-    // Méthode pour créer un nouveau cours
     #[Route('/new', name: 'app_cours_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -50,19 +44,15 @@ final class CoursController extends AbstractController
         $form = $this->createForm(CoursType::class, $cours);
         $form->handleRequest($request);
 
-        // Valider le formulaire et les données du cours
         if ($form->isSubmitted() && $form->isValid()) {
-            // Validation du cours (exemple pour vérifier la durée)
             $errors = $this->validator->validate($cours);
 
             if (count($errors) > 0) {
-                // S'il y a des erreurs de validation, les afficher
                 return $this->render('cours/error.html.twig', [
                     'errors' => $errors,
                 ]);
             }
 
-            // Si aucune erreur, persister l'entité
             $entityManager->persist($cours);
             $entityManager->flush();
 
@@ -75,7 +65,6 @@ final class CoursController extends AbstractController
         ]);
     }
 
-    // Méthode pour afficher un cours spécifique
     #[Route('/{id}', name: 'app_cours_show', methods: ['GET'])]
     public function show(Cours $cours): Response
     {
@@ -84,26 +73,21 @@ final class CoursController extends AbstractController
         ]);
     }
 
-    // Méthode pour éditer un cours existant
     #[Route('/{id}/edit', name: 'app_cours_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Cours $cours, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CoursType::class, $cours);
         $form->handleRequest($request);
 
-        // Valider le formulaire et les données du cours
         if ($form->isSubmitted() && $form->isValid()) {
-            // Validation du cours
             $errors = $this->validator->validate($cours);
 
             if (count($errors) > 0) {
-                // Si des erreurs sont présentes, les afficher
                 return $this->render('cours/error.html.twig', [
                     'errors' => $errors,
                 ]);
             }
 
-            // Si aucune erreur, appliquer les modifications
             $entityManager->flush();
 
             return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
@@ -115,14 +99,18 @@ final class CoursController extends AbstractController
         ]);
     }
 
-    // Méthode pour supprimer un cours
+    // Méthode pour supprimer un cours et ses ressources associées
     #[Route('/{id}', name: 'app_cours_delete', methods: ['POST'])]
     public function delete(Request $request, Cours $cours, EntityManagerInterface $entityManager): Response
     {
         // Vérifier si le token CSRF est valide avant de supprimer
         if ($this->isCsrfTokenValid('delete' . $cours->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($cours);
-            $entityManager->flush();
+            // Supprimer toutes les ressources associées à ce cours
+            foreach ($cours->getRessources() as $ressource) {
+                $entityManager->remove($ressource); // Supprime chaque ressource liée au cours
+            }
+            $entityManager->remove($cours); // Supprime le cours lui-même
+            $entityManager->flush(); // Valide toutes les suppressions
         }
 
         return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);

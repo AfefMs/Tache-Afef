@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProjetRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,20 @@ class Projet
 
     #[ORM\Column(length: 255)]
     private ?string $statuts = null;
+
+    /**
+     * @var Collection<int, Tache>
+     */
+    #[ORM\OneToMany(targetEntity: Tache::class, mappedBy: 'projet')]
+    private Collection $Tache;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pdfprojet = null;
+
+    public function __construct()
+    {
+        $this->Tache = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -108,4 +124,47 @@ class Projet
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Tache>
+     */
+    public function getTache(): Collection
+    {
+        return $this->Tache;
+    }
+
+    public function addTache(Tache $tache): static
+    {
+        if (!$this->Tache->contains($tache)) {
+            $this->Tache->add($tache);
+            $tache->setProjet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTache(Tache $tache): static
+    {
+        if ($this->Tache->removeElement($tache)) {
+            // set the owning side to null (unless already changed)
+            if ($tache->getProjet() === $this) {
+                $tache->setProjet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPdfprojet(): ?string
+    {
+        return $this->pdfprojet;
+    }
+
+    public function setPdfprojet(?string $pdfprojet): static
+    {
+        $this->pdfprojet = $pdfprojet;
+
+        return $this;
+    }
+   
 }

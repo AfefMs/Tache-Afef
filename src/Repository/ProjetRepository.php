@@ -40,10 +40,14 @@ class ProjetRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
-public function findBySearchTerm($searchTerm)
+public function findBySearchTerm(string $searchTerm): array
 {
-    return $this->createQueryBuilder('p')
-        ->where('p.nomP LIKE :searchTerm OR p.descriptionP LIKE :searchTerm')
+    $qb = $this->createQueryBuilder('p');
+    
+    return $qb->where($qb->expr()->orX(
+            $qb->expr()->like('p.nomP', ':searchTerm'),
+            $qb->expr()->like('p.descriptionP', ':searchTerm')
+        ))
         ->setParameter('searchTerm', '%' . $searchTerm . '%')
         ->getQuery()
         ->getResult();

@@ -1,10 +1,13 @@
 <?php
 
+// src/Form/RessourceType.php
+
 namespace App\Form;
 
 use App\Entity\Ressource;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,20 +24,26 @@ class RessourceType extends AbstractType
                     'TP' => 'TP',
                     'Cour' => 'Cour',
                 ],
-                'expanded' => false,  // false pour une liste déroulante (pas de boutons radio)
-                'multiple' => false, // Un seul choix possible
                 'label' => 'Type de ressource',
             ])
-            ->add('nomR', TextType::class)
-            ->add('fileR', TextareaType::class)
+            ->add('nomR', TextType::class, [
+                'label' => 'Nom de la ressource',
+            ])
+            ->add('fileR', TextareaType::class, [
+                'label' => 'Description du fichier',
+            ])
             ->add('dureeR', ChoiceType::class, [
                 'choices' => [
                     '1' => '1',
                     '2' => '2',
                 ],
-                'expanded' => false,  // false pour une liste déroulante
-                'multiple' => false, // Un seul choix possible
                 'label' => 'Durée (en heures)',
+            ])
+            ->add('pdfressource', FileType::class, [
+                'label' => 'Télécharger un PDF',
+                'required' => false, // facultatif si vous ne voulez pas obliger l'utilisateur à uploader un fichier
+                'mapped' => false, // Ce champ n'est pas mappé directement à une propriété de l'entité
+                'attr' => ['class' => 'form-control'],
             ]);
     }
 
@@ -45,3 +54,4 @@ class RessourceType extends AbstractType
         ]);
     }
 }
+
