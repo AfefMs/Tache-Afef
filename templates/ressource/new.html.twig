@@ -1,21 +1,55 @@
-
 {% extends 'base2.html.twig' %}
 
 {% block title %}Créer une ressource{% endblock %}
 
 {% block body %}
-    <h1>Créer une nouvelle ressource</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Créer une nouvelle ressource</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.typeR) }}
-        {{ form_row(form.nomR) }}
-        {{ form_row(form.fileR) }}
-        {{ form_row(form.dureeR) }}
-        {{ form_row(form.pdfressource) }}
+        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+        
+        <div class="mb-3">
+            {{ form_label(form.typeR, 'Type de ressource') }}
+            {{ form_widget(form.typeR, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.typeR) }}
+        </div>
 
-        <button class="btn btn-primary">Créer</button>
-    {{ form_end(form) }}
+        <div class="mb-3">
+            {{ form_label(form.nomR, 'Nom de la ressource') }}
+            {{ form_widget(form.nomR, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.nomR) }}
+        </div>
 
-    <a href="{{ path('app_ressource_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <div class="mb-3">
+            {{ form_label(form.fileR, 'Description du fichier') }}
+            {{ form_widget(form.fileR, {'attr': {'class': 'form-control-file'}}) }}
+            {{ form_errors(form.fileR) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.dureeR, 'Durée') }}
+            {{ form_widget(form.dureeR, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.dureeR) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.pdfressource, 'PDF de la ressource') }}
+            {{ form_widget(form.pdfressource, {'attr': {'class': 'form-control-file'}}) }}
+            {{ form_errors(form.pdfressource) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.cours, 'Sélectionner un cours') }}
+            {{ form_widget(form.cours, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.cours) }}
+        </div>
+
+        <button class="btn btn-primary mt-3" type="submit">Créer</button>
+
+        {{ form_end(form) }}
+        
+        <div class="mt-4">
+            <a href="{{ path('app_ressource_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
 {% endblock %}
-

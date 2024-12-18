@@ -1,5 +1,7 @@
 <?php
 
+// src/Form/CoursType.php
+
 namespace App\Form;
 
 use App\Entity\Cours;
@@ -15,22 +17,27 @@ class CoursType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomC', TextType::class)
+            ->add('nomC', TextType::class, [
+                'label' => 'Nom du Cours',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Nom du cours'],
+            ])
             ->add('dureeC', IntegerType::class, [
-                'attr' => [
-                    'min' => 0,
-                ],
-            ]
-            
-            )
+                'label' => 'Durée (en heures)',
+                'attr' => ['min' => 0, 'class' => 'form-control', 'placeholder' => 'Durée du cours'],
+            ])
             ->add('periodeC', IntegerType::class, [
+                'label' => 'Période',
                 'attr' => [
                     'min' => 1,
-                    'max'=> 2,
+                    'max' => 2,
+                    'class' => 'form-control',
+                    'placeholder' => '1 = Premier semestre, 2 = Second semestre',
                 ],
-
             ])
-            ->add('descriptionC', TextareaType::class);
+            ->add('descriptionC', TextareaType::class, [
+                'label' => 'Description du Cours',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Description détaillée du cours'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -40,4 +47,3 @@ class CoursType extends AbstractType
         ]);
     }
 }
-

@@ -24,6 +24,7 @@
                     <td>{{ ressource.dureeR }} heures</td>
                     <td>
                         <a href="{{ path('app_ressource_show', {'id': ressource.id}) }}" class="btn btn-info">Voir</a>
+
                         <a href="{{ path('app_ressource_edit', {'id': ressource.id}) }}" class="btn btn-warning">Modifier</a>
                         <form action="{{ path('app_ressource_delete', {'id': ressource.id}) }}" method="post" style="display:inline;">
                             <button class="btn btn-danger">Supprimer</button>

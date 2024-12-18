@@ -1,5 +1,3 @@
-
-
 {% extends 'base2.html.twig' %}
 
 {% block title %}Détails de la ressource{% endblock %}
@@ -13,12 +11,11 @@
         <li><strong>Durée :</strong> {{ ressource.dureeR }} heures</li>
     </ul>
 
-   {% if ressource.pdfressource %}
-    <p><strong>Fichier PDF:</strong> <a href="{{ asset('uploads/pdf/' ~ ressource.pdfressource) }}" target="_blank">Télécharger</a></p>
-{% else %}
-    <p>Aucun fichier PDF associé.</p>
-{% endif %}
-
+    {% if ressource.pdfressource %}
+        <p><strong>Fichier PDF:</strong> <a href="{{ asset('uploads/pdf/' ~ ressource.pdfressource) }}" target="_blank">Télécharger</a></p>
+    {% else %}
+        <p>Aucun fichier PDF associé.</p>
+    {% endif %}
 
     <a href="{{ path('app_ressource_index') }}" class="btn btn-secondary">Retour à la liste</a>
     <a href="{{ path('app_ressource_edit', {'id': ressource.id}) }}" class="btn btn-warning">Modifier</a>

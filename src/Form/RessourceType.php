@@ -1,10 +1,10 @@
 <?php
 
-// src/Form/RessourceType.php
-
 namespace App\Form;
 
 use App\Entity\Ressource;
+use App\Entity\Cours;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -44,6 +44,12 @@ class RessourceType extends AbstractType
                 'required' => false, // facultatif si vous ne voulez pas obliger l'utilisateur à uploader un fichier
                 'mapped' => false, // Ce champ n'est pas mappé directement à une propriété de l'entité
                 'attr' => ['class' => 'form-control'],
+            ])
+            ->add('cours', EntityType::class, [
+                'class' => Cours::class,
+                'choice_label' => 'nomC',  // Affiche le nom du cours dans le menu déroulant
+                'label' => 'Sélectionner un cours',
+                'attr' => ['class' => 'form-control'],
             ]);
     }
 
@@ -54,4 +60,3 @@ class RessourceType extends AbstractType
         ]);
     }
 }
-

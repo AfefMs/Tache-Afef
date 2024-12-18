@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Ressource;
@@ -60,18 +59,6 @@ final class RessourceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_ressource_show', methods: ['GET'])]
-    public function show(?Ressource $ressource): Response
-    {
-        if (!$ressource) {
-            throw $this->createNotFoundException('Ressource non trouvée.');
-        }
-
-        return $this->render('ressource/show.html.twig', [
-            'ressource' => $ressource,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_ressource_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Ressource $ressource, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
@@ -114,6 +101,14 @@ final class RessourceController extends AbstractController
 
         return $this->redirectToRoute('app_ressource_index');
     }
+    #[Route('/{id}', name: 'app_ressource_show', methods: ['GET'])]
+public function show(Ressource $ressource): Response
+{
+    return $this->render('ressource/show.html.twig', [
+        'ressource' => $ressource,
+    ]);
+}
+
 
     #[Route('/uploads/pdf/{filename}', name: 'app_file_download')]
     public function downloadFile(string $filename): Response
